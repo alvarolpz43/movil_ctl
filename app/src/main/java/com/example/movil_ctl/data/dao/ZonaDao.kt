@@ -1,10 +1,12 @@
 package com.example.movil_ctl.data.dao
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.movil_ctl.data.entities.ZonasEntity
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface ZonaDao {
 
     @Query("select * from zonas")

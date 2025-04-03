@@ -47,22 +47,22 @@ import androidx.room.PrimaryKey
         ),
         ForeignKey(
             entity = EquipoEntity::class,
-            parentColumns = ["codigo_equipo"],
-            childColumns = ["codigo_equipo"],
+            parentColumns = ["id"],
+            childColumns = ["equipo_id"],
             onDelete = ForeignKey.NO_ACTION
         ),
         ForeignKey(
             entity = OperadorEntity::class,
-            parentColumns = ["cedula_operador"],
-            childColumns = ["cedula_operador"],
+            parentColumns = ["id"],
+            childColumns = ["operador_id"],
             onDelete = ForeignKey.NO_ACTION
         )
     ]
 )
 data class RegistroEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "codigo_equipo") val codigoEquipo: String,
-    @ColumnInfo(name = "cedula_operador") val cedulaOperador: String,
+    @ColumnInfo(name = "equipo_id") val codigoEquipo: String,
+    @ColumnInfo(name = "operador_id") val cedulaOperador: String,
     @ColumnInfo(name = "zona_id") val zonaId: Int,
     @ColumnInfo(name = "nucleo_id") val nucleoId: Int,
     @ColumnInfo(name = "finca_id") val fincaId: Int,

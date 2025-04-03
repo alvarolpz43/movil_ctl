@@ -1,6 +1,7 @@
 package com.example.movil_ctl.data
 
 import androidx.room.TypeConverter
+import java.util.Date
 
 class Converters {
 

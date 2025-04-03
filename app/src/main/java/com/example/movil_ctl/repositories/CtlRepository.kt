@@ -12,14 +12,28 @@ class CtlRepository(private val db: AppDatabase) {
         db.equipoDao().insertAll(equipos)
     }
 
+    suspend fun deleteEquipos() {
+        db.equipoDao().deleteAll()
+    }
+
     // Operaciones con operadores
     suspend fun saveOperadores(operadores: List<OperadorEntity>) {
         db.operadorDao().createOperadores(operadores)
     }
 
+    suspend fun deleteOperadores() {
+        db.operadorDao().deleteAll()
+    }
+
+
     suspend fun saveContratistas(contratistas: List<ContratistaEntity>) {
         db.contratistaDao().insertAll(contratistas)
     }
+
+    suspend fun deleteContratistas() {
+        db.contratistaDao().deleteAll()
+    }
+
 
     // Sincronización de registros
 //    suspend fun getUnsyncedRegistros(): List<RegistroEntity> {

@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "especies")
 data class EspecieEntity(
-    @PrimaryKey @ColumnInfo(name = "_id") val id: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "nombre") val nombre: String
 )

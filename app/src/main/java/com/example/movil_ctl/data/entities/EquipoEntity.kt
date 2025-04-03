@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
     )])
 
 data class EquipoEntity(
-    @ColumnInfo(name = "_id") val id: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "nombre_equipo") val nombreEquipo: String,
     @ColumnInfo(name = "serie_equipo") val serieEquipo: String,
     @ColumnInfo(name = "contratistas_id") val contratistasId: String

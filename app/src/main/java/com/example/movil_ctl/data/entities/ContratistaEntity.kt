@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "contratistas")
 data class ContratistaEntity(
-    @PrimaryKey @ColumnInfo(name = "_id") val id: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "nombre") val nombre: String,
     @ColumnInfo(name = "estado") val estado: Boolean
 )

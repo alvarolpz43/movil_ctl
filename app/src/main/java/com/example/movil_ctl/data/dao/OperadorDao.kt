@@ -1,5 +1,6 @@
 package com.example.movil_ctl.data.dao
 
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.movil_ctl.data.entities.OperadorEntity
@@ -11,5 +12,8 @@ interface OperadorDao {
 
     @Insert
     fun createOperadores(operadores: List<OperadorEntity>): Flow<List<OperadorEntity>>
+
+    @Query("DELETE FROM operadores")
+    suspend fun deleteAll()
 
 }

@@ -21,7 +21,7 @@ interface ApiService {
     suspend fun getEquipos(): Response<List<EquipoResponse>>
 
     @GET("operadores")
-    suspend fun getOperadores(): Response<ApiResponse<List<OperadorResponse>>>
+    suspend fun getOperadores(): Response<List<OperadorResponse>>
 
     @GET("turnos")
     suspend fun getTurnos(): ApiResponse<List<TurnoResponse>>

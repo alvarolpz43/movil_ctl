@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
     )]
 )
 data class NucleosEntity(
-    @PrimaryKey @ColumnInfo(name = "_id") val id: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "cod_nucleo") val codNucleo: String,
     @ColumnInfo(name = "nombre") val nombre: String,
     @ColumnInfo(name = "zona_id") val zonaId: String

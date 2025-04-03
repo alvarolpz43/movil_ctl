@@ -8,6 +8,7 @@ import com.example.movil_ctl.core.ApiClient
 import com.example.movil_ctl.data.AppDatabase
 import com.example.movil_ctl.data.entities.ContratistaEntity
 import com.example.movil_ctl.data.entities.EquipoEntity
+import com.example.movil_ctl.data.entities.OperadorEntity
 import com.example.movil_ctl.repositories.CtlRepository
 
 
@@ -21,18 +22,23 @@ class SyncWorker(
 
     override suspend fun doWork(): Result {
         return try {
+            syncContratistas()
+            syncEquipos()
+            syncOperadores()
 
             Result.success()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.retry()
         }
     }
+
     private suspend fun syncContratistas() {
         try {
             val response = api.getContratistas()
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
+                    repository.deleteContratistas()
                     // Como ahora es List<ContratistaResponse>, necesitamos flatMap
                     val contratistasEntities = body.flatMap { contratistaResponse ->
                         contratistaResponse.data.map { contratistaStructure ->
@@ -46,7 +52,10 @@ class SyncWorker(
 
                     if (contratistasEntities.isNotEmpty()) {
                         repository.saveContratistas(contratistasEntities)
-                        Log.d("SyncWorker", "Sincronizados ${contratistasEntities.size} contratistas")
+                        Log.d(
+                            "SyncWorker",
+                            "Sincronizados ${contratistasEntities.size} contratistas"
+                        )
                     } else {
                         Log.w("SyncWorker", "La lista de contratistas está vacía")
                     }
@@ -70,6 +79,8 @@ class SyncWorker(
                 val body = response.body()
                 if (body != null) {
 
+                    repository.deleteEquipos()
+
                     val equiposEntities = body.flatMap { equipoResponse ->
                         equipoResponse.data.map { equipoStructure ->
                             EquipoEntity(
@@ -92,7 +103,9 @@ class SyncWorker(
                     throw Exception("Respuesta de equipos no exitosa o cuerpo nulo")
                 }
             } else {
-                val errorMsg = "Error HTTP al obtener equipos: ${response.code()} - ${response.errorBody()?.string()}"
+                val errorMsg = "Error HTTP al obtener equipos: ${response.code()} - ${
+                    response.errorBody()?.string()
+                }"
                 Log.e("SyncWorker", errorMsg)
                 throw Exception(errorMsg)
             }
@@ -107,16 +120,35 @@ class SyncWorker(
             val response = api.getOperadores()
             if (response.isSuccessful) {
                 val body = response.body()
-                if (body != null && body.success) {
-                    body.data?.let { operadores ->
-                        repository.saveOperadores(operadores.map { it.toLocalOperador() })
+                if (body != null) {
+
+                    repository.deleteOperadores()
+
+                    val operadoresEntities = body.flatMap { operadorResponse ->
+                        operadorResponse.data.map { operadorStructure ->
+                            OperadorEntity(
+                                id = operadorStructure.id,
+                                nombreOperador = operadorStructure.nombreOperador,
+                                cedulaOperador = operadorStructure.cedulaOperador,
+                                equiposId = operadorStructure.equipo.id
+                            )
+                        }
+                    }
+
+                    if (operadoresEntities.isNotEmpty()) {
+                        repository.saveOperadores(operadoresEntities)
+                        Log.d("SyncWorker", "Sincronizados ${operadoresEntities.size} contratistas")
+                    } else {
+                        Log.w("SyncWorker", "La lista de contratistas está vacía")
                     }
                 } else {
                     Log.e("SyncWorker", "Respuesta de operadores no exitosa o cuerpo nulo")
                     throw Exception("Respuesta de operadores no exitosa o cuerpo nulo")
                 }
             } else {
-                val errorMsg = "Error HTTP al obtener operadores: ${response.code()} - ${response.errorBody()?.string()}"
+                val errorMsg = "Error HTTP al obtener operadores: ${response.code()} - ${
+                    response.errorBody()?.string()
+                }"
                 Log.e("SyncWorker", errorMsg)
                 throw Exception(errorMsg)
             }
