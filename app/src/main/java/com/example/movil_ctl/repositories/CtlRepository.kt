@@ -3,8 +3,13 @@ package com.example.movil_ctl.repositories
 import com.example.movil_ctl.data.AppDatabase
 import com.example.movil_ctl.data.entities.ContratistaEntity
 import com.example.movil_ctl.data.entities.EquipoEntity
+import com.example.movil_ctl.data.entities.EspecieEntity
+import com.example.movil_ctl.data.entities.FincasEntity
+import com.example.movil_ctl.data.entities.NucleosEntity
 import com.example.movil_ctl.data.entities.OperadorEntity
 import com.example.movil_ctl.data.entities.RegistroEntity
+import com.example.movil_ctl.data.entities.TurnoEntity
+import com.example.movil_ctl.data.entities.ZonasEntity
 
 class CtlRepository(private val db: AppDatabase) {
     // Operaciones con equipos
@@ -32,6 +37,46 @@ class CtlRepository(private val db: AppDatabase) {
 
     suspend fun deleteContratistas() {
         db.contratistaDao().deleteAll()
+    }
+
+    suspend fun saveEspecies(especies: List<EspecieEntity>) {
+        db.especieDao().createEspecies(especies)
+    }
+
+    suspend fun deleteEspecies() {
+        db.especieDao().deleteAll()
+    }
+
+    suspend fun saveTurnos(turnos: List<TurnoEntity>) {
+        db.turnoDao().createTurnos(turnos)
+    }
+
+    suspend fun deleteTurnos() {
+        db.turnoDao().deleteAll()
+    }
+
+    suspend fun saveZonas(zonas: List<ZonasEntity>) {
+        db.zonaDao().insertZonas(zonas)
+    }
+
+    suspend fun deleteZonas() {
+        db.zonaDao().deleteAll()
+    }
+
+    suspend fun saveNucleos(nucleos: List<NucleosEntity>) {
+        db.nucleoDao().createNucleos(nucleos)
+    }
+
+    suspend fun deleteNucleos() {
+        db.nucleoDao().deleteAll()
+    }
+
+    suspend fun saveFincas(fincas: List<FincasEntity>) {
+        db.fincaDao().createFincas(fincas)
+    }
+
+    suspend fun deleteFincas() {
+        db.fincaDao().deleteAll()
     }
 
 

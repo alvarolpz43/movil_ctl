@@ -1,10 +1,12 @@
 package com.example.movil_ctl.data.dao
 
+import androidx.room.Dao
 import androidx.room.Query
 import com.example.movil_ctl.data.entities.RegistroEntity
 import kotlinx.coroutines.flow.Flow
 
-interface RegistroDao : BaseDao<RegistroDao> {
+@Dao
+interface RegistroDao  {
     @Query("SELECT * FROM registros")
     fun getAll(): Flow<List<RegistroEntity>>
 

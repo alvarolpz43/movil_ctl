@@ -47,8 +47,8 @@ dependencies {
 
 
     // MongoDB Realm SDK
-    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
-    implementation("io.realm.kotlin:library-sync:1.11.0")
+//    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+//    implementation("io.realm.kotlin:library-sync:1.11.0")
 
 
     // WorkManager para sincronización periódica

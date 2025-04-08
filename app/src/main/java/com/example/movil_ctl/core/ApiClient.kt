@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://backend-ctl.vercel.app/"
+    private const val BASE_URL = "https://backend-ctl.vercel.app/ctl/"
 
     val instance: ApiService by lazy {
         val interceptor = HttpLoggingInterceptor().apply {

@@ -15,28 +15,28 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("contratistas")
-    suspend fun getContratistas(): Response<List<ContratistaResponse>>
+    suspend fun getContratistas(): Response<ContratistaResponse>
 
     @GET("equipos")
-    suspend fun getEquipos(): Response<List<EquipoResponse>>
+    suspend fun getEquipos(): Response<EquipoResponse>
 
     @GET("operadores")
-    suspend fun getOperadores(): Response<List<OperadorResponse>>
+    suspend fun getOperadores(): Response<OperadorResponse>
 
     @GET("turnos")
-    suspend fun getTurnos(): ApiResponse<List<TurnoResponse>>
+    suspend fun getTurnos(): Response<TurnoResponse>
 
     @GET("especies")
-    suspend fun getEspecies(): ApiResponse<List<EspecieResponse>>
+    suspend fun getEspecies(): Response<EspecieResponse>
 
     @GET("fincas")
-    suspend fun getFincas(): ApiResponse<List<FincaResponse>>
+    suspend fun getFincas(): Response<FincaResponse>
 
     @GET("nucleos")
-    suspend fun getNucleos(): ApiResponse<List<NucleoResponse>>
+    suspend fun getNucleos(): Response<NucleoResponse>
 
     @GET("zonas")
-    suspend fun getZonas(): ApiResponse<List<ZonaResponse>>
+    suspend fun getZonas(): Response<ZonaResponse>
 
 
 //    @GET("registros")

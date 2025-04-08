@@ -2,6 +2,7 @@ package com.example.movil_ctl.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.movil_ctl.data.entities.ZonasEntity
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,10 @@ interface ZonaDao {
     @Query("select * from zonas")
     fun getAllZonas(): Flow<List<ZonasEntity>>
 
-    @Insert
-    fun createZonas(zonas: List<ZonasEntity>): Flow<List<ZonasEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertZonas(zonas: List<ZonasEntity>)
+
+    @Query("DELETE FROM zonas")
+    suspend fun deleteAll()
+
 }
