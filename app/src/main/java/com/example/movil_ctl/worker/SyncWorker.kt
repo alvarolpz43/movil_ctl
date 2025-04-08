@@ -15,6 +15,7 @@ import com.example.movil_ctl.data.entities.OperadorEntity
 import com.example.movil_ctl.data.entities.TurnoEntity
 import com.example.movil_ctl.data.entities.ZonasEntity
 import com.example.movil_ctl.repositories.CtlRepository
+import kotlinx.coroutines.flow.map
 
 
 class SyncWorker(
@@ -27,14 +28,19 @@ class SyncWorker(
 
     override suspend fun doWork(): Result {
         return try {
+            // 1. Sincronizar entidades sin dependencias
             syncContratistas()
-            syncEquipos()
-            syncOperadores()
             syncEspecies()
-            syncTurnos()
+
+            // 2. Sincronizar jerarquía crítica: Zonas → Nucleos → Fincas
             syncZonas()
             syncNucleos()
             syncFincas()
+
+            // 3. Sincronizar dependencias restantes
+            syncEquipos()
+            syncOperadores()
+            syncTurnos()
 
             Result.success()
         } catch (e: Exception) {
@@ -218,10 +224,10 @@ class SyncWorker(
                     val turnosEntities = body.data.map { turnosResponse ->
                         TurnoEntity(
                             id = turnosResponse._id ?: "",
-                            nombre = turnosResponse.nombre ?: "",
-                            horaInicio = turnosResponse.hora_inicio ?: "",
-                            horaFin = turnosResponse.hora_fin ?: "",
-                            contratistasId = turnosResponse.contratistas_id!!.id
+                            nombre = turnosResponse.nombreTurno ?: "",
+                            horaInicio = turnosResponse.horaInicio ?: "",
+                            horaFin = turnosResponse.horaFin ?: "",
+                            contratistasId = turnosResponse.contratistaId!!.id
 
                         )
 
@@ -300,14 +306,26 @@ class SyncWorker(
 
                     repository.deleteNucleos()
 
+
+
                     val nucleosEntities = body.data.map { nucleosResponse ->
                         NucleosEntity(
                             id = nucleosResponse.id,
                             nombre = nucleosResponse.nombreNucleo,
                             codNucleo = nucleosResponse.codeNucleo,
-                            zonaId = nucleosResponse.zonaId.id
+                            zonaId = nucleosResponse.zonaId
                         )
 
+                    }
+
+
+                    val zonasIds = repository.getAllZonas().map { it.id }
+
+
+                    val nucleosInvalidos = nucleosEntities.filter { it.zonaId !in zonasIds }
+                    if (nucleosInvalidos.isNotEmpty()) {
+                        Log.e("SyncWorker", "ZonaIds no encontrados: ${nucleosInvalidos.map { it.zonaId }}")
+                        throw Exception("ZonaIds inválidos en núcleos")
                     }
 
                     if (nucleosEntities.isNotEmpty()) {
@@ -347,9 +365,19 @@ class SyncWorker(
                             id = fincasResponse.id,
                             nombre = fincasResponse.nombreFinca,
                             codFinca = fincasResponse.codeFinca,
-                            nucleoId = fincasResponse.nucleoId.id
+                            nucleoId = fincasResponse.nucleoId
                         )
 
+                    }
+
+
+                    val nucleosIds = repository.getAllNucleos().map { it.id }
+
+
+                    val fincasInvalidas = fincasEntities.filter { it.nucleoId !in nucleosIds }
+                    if (fincasInvalidas.isNotEmpty()) {
+                        Log.e("SyncWorker", "NucleoIds no encontrados: ${fincasInvalidas.map { it.nucleoId }}")
+                        throw Exception("NucleoIds inválidos en fincas")
                     }
 
                     if (fincasEntities.isNotEmpty()) {

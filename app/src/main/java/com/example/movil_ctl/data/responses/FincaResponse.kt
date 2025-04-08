@@ -12,7 +12,7 @@ data class FincaStructure(
     @SerializedName("_id") val id: String,
     @SerializedName("codeFinca") val codeFinca: String,
     @SerializedName("nombreFinca") val nombreFinca: String,
-    @SerializedName("nucleoId") val nucleoId: NucleoStructure,
+    @SerializedName("nucleoId") val nucleoId: String,
 )
 
 //fun FincaStructure.toLocalFinca(): FincasEntity {

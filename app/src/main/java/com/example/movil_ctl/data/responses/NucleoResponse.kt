@@ -12,7 +12,7 @@ data class NucleoStructure(
     @SerializedName("_id") val id: String,
     @SerializedName("codeNucleo") val codeNucleo: String,
     @SerializedName("nombreNucleo") val nombreNucleo: String,
-    @SerializedName("zonaId") val zonaId: ZonaStructure
+    @SerializedName("zonaId") val zonaId: String
 )
 
 //fun NucleoStructure.toLocalNucleo(): NucleosEntity {

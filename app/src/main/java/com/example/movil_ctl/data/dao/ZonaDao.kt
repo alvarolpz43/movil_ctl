@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ZonaDao {
 
     @Query("select * from zonas")
-    fun getAllZonas(): Flow<List<ZonasEntity>>
+    fun getAllZonas(): List<ZonasEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertZonas(zonas: List<ZonasEntity>)

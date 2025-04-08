@@ -9,10 +9,10 @@ data class TurnoResponse(
 
 data class TurnoStructure(
     val _id: String?,
-    val nombre: String?,
-    val hora_inicio: String?,
-    val hora_fin: String?,
-    val contratistas_id: ContratistaEstructure?,
+    val nombreTurno: String?,
+    val horaInicio: String?,
+    val horaFin: String?,
+    val contratistaId: ContratistaEstructure?,
 )
 
 //fun TurnoStructure.toLocalTurno(): TurnoEntity {

@@ -63,12 +63,20 @@ class CtlRepository(private val db: AppDatabase) {
         db.zonaDao().deleteAll()
     }
 
+    suspend fun getAllZonas(): List<ZonasEntity>{
+        return db.zonaDao().getAllZonas()
+    }
+
     suspend fun saveNucleos(nucleos: List<NucleosEntity>) {
         db.nucleoDao().createNucleos(nucleos)
     }
 
     suspend fun deleteNucleos() {
         db.nucleoDao().deleteAll()
+    }
+
+    suspend fun getAllNucleos(): List<NucleosEntity>{
+        return db.nucleoDao().getAllNucleos()
     }
 
     suspend fun saveFincas(fincas: List<FincasEntity>) {

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface NucleoDao {
 
     @Query("select * from nucleos")
-    fun getAllNucleos(): Flow<List<NucleosEntity>>
+    fun getAllNucleos(): List<NucleosEntity>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
