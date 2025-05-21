@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ContratistaDao {
     @Query("SELECT * FROM contratistas")
-    fun getAll(): Flow<List<ContratistaEntity>>  // Para observación continua
+    fun getAll(): Flow<List<ContratistaEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(contratistas: List<ContratistaEntity>)  // Solo inserción
+    suspend fun insertAll(contratistas: List<ContratistaEntity>)
 
     @Query("SELECT * FROM contratistas WHERE id = :id")
     suspend fun getById(id: String): ContratistaEntity?

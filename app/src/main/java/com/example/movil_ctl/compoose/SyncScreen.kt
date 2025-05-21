@@ -1,8 +1,5 @@
 package com.example.movil_ctl.compoose
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.movil_ctl.utils.isOnline
 import com.example.movil_ctl.view.SyncViewModel
 import kotlinx.coroutines.launch
 
@@ -94,11 +92,3 @@ fun SyncScreen(viewModel: SyncViewModel = androidx.lifecycle.viewmodel.compose.v
     }
 }
 
-fun isOnline(context: Context): Boolean {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkCapabilities = connectivityManager.activeNetwork ?: return false
-    val activeNetwork =
-        connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-    return activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-}

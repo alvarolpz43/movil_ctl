@@ -12,6 +12,10 @@ interface FincaDao {
     @Query("select * from fincas")
     fun getAllFincas(): Flow<List<FincasEntity>>
 
+
+    @Query("SELECT * FROM fincas WHERE nucleo_id = :nucleoId")
+    fun getFincasByNucleo(nucleoId: String): Flow<List<FincasEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun createFincas(fincas: List<FincasEntity>)
 

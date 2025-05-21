@@ -15,7 +15,6 @@ import com.example.movil_ctl.data.entities.OperadorEntity
 import com.example.movil_ctl.data.entities.TurnoEntity
 import com.example.movil_ctl.data.entities.ZonasEntity
 import com.example.movil_ctl.repositories.CtlRepository
-import kotlinx.coroutines.flow.map
 
 
 class SyncWorker(
@@ -102,7 +101,8 @@ class SyncWorker(
                             id = equipoResponse.id,
                             nombreEquipo = equipoResponse.nombreEquipo,
                             serieEquipo = equipoResponse.serieEquipo,
-                            contratistasId = equipoResponse.contratista.id
+                            tipoEquipo = equipoResponse.tipoEquipo,
+                            contratistasId = equipoResponse.contratista
                         )
 
                     }
@@ -307,7 +307,6 @@ class SyncWorker(
                     repository.deleteNucleos()
 
 
-
                     val nucleosEntities = body.data.map { nucleosResponse ->
                         NucleosEntity(
                             id = nucleosResponse.id,
@@ -324,7 +323,10 @@ class SyncWorker(
 
                     val nucleosInvalidos = nucleosEntities.filter { it.zonaId !in zonasIds }
                     if (nucleosInvalidos.isNotEmpty()) {
-                        Log.e("SyncWorker", "ZonaIds no encontrados: ${nucleosInvalidos.map { it.zonaId }}")
+                        Log.e(
+                            "SyncWorker",
+                            "ZonaIds no encontrados: ${nucleosInvalidos.map { it.zonaId }}"
+                        )
                         throw Exception("ZonaIds inválidos en núcleos")
                     }
 
@@ -372,11 +374,14 @@ class SyncWorker(
 
 
                     val nucleosIds = repository.getAllNucleos().map { it.id }
-
+                    Log.d("SyncWorker", "IDs de núcleos en BD: $nucleosIds")
 
                     val fincasInvalidas = fincasEntities.filter { it.nucleoId !in nucleosIds }
                     if (fincasInvalidas.isNotEmpty()) {
-                        Log.e("SyncWorker", "NucleoIds no encontrados: ${fincasInvalidas.map { it.nucleoId }}")
+                        Log.e(
+                            "SyncWorker",
+                            "NucleoIds no encontrados: ${fincasInvalidas.map { it.nucleoId }}"
+                        )
                         throw Exception("NucleoIds inválidos en fincas")
                     }
 

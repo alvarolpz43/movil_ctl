@@ -13,8 +13,12 @@ interface TurnoDao {
     @Query("select * from turnos where contratistas_id = :contratistaId")
     fun getAllTurnoByContratista(contratistaId: Int): Flow<List<TurnoEntity>>
 
+    @Query("SELECT * FROM turnos WHERE contratistas_id = :contratistaId")
+    fun getTurnosByContratista(contratistaId: String): Flow<List<TurnoEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun createTurnos(turnos: List<TurnoEntity>)
+
 
     @Query("DELETE FROM turnos")
     fun deleteAll()

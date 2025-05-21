@@ -12,9 +12,12 @@ data class EquipoStructure(
     @SerializedName("_id") val id: String,
     @SerializedName("nombreEquipo") val nombreEquipo: String,
     @SerializedName("serieEquipo") val serieEquipo: String,
-    @SerializedName("contratistaId") val contratista: ContratistaEstructure,
+    @SerializedName("tipoEquipo") val tipoEquipo: String,
+    @SerializedName("contratistaId") val contratista: String,
     @SerializedName("__v") val version: Int
 )
+
+
 
 //fun     EquipoStructure.toLocalEquipo(): EquipoEntity {
 //    return EquipoEntity(

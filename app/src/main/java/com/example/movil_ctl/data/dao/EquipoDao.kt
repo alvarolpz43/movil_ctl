@@ -12,6 +12,9 @@ interface EquipoDao {
     @Query("SELECT * FROM equipos")
     fun getAll(): Flow<List<EquipoEntity>>
 
+    @Query("SELECT * FROM equipos WHERE contratistas_id = :contratistaId")
+    fun getEquiposByContratista(contratistaId: String): Flow<List<EquipoEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(equipos: List<EquipoEntity>)
 

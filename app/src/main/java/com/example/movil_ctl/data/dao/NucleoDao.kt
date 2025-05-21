@@ -13,6 +13,8 @@ interface NucleoDao {
     @Query("select * from nucleos")
     fun getAllNucleos(): List<NucleosEntity>
 
+    @Query("SELECT * FROM nucleos WHERE zona_id = :zonaId")
+    fun getNucleosByZona(zonaId: String): Flow<List<NucleosEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun createNucleos(nucleos: List<NucleosEntity>)

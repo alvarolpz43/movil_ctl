@@ -17,5 +17,6 @@ data class EquipoEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "nombre_equipo") val nombreEquipo: String,
     @ColumnInfo(name = "serie_equipo") val serieEquipo: String,
+    @ColumnInfo(name = "tipo_equipo") val tipoEquipo: String,
     @ColumnInfo(name = "contratistas_id") val contratistasId: String
 )

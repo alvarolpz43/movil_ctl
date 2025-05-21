@@ -7,12 +7,11 @@ import com.example.movil_ctl.data.entities.EspecieEntity
 import com.example.movil_ctl.data.entities.FincasEntity
 import com.example.movil_ctl.data.entities.NucleosEntity
 import com.example.movil_ctl.data.entities.OperadorEntity
-import com.example.movil_ctl.data.entities.RegistroEntity
 import com.example.movil_ctl.data.entities.TurnoEntity
 import com.example.movil_ctl.data.entities.ZonasEntity
+import kotlinx.coroutines.flow.Flow
 
 class CtlRepository(private val db: AppDatabase) {
-    // Operaciones con equipos
     suspend fun saveEquipos(equipos: List<EquipoEntity>) {
         db.equipoDao().insertAll(equipos)
     }
@@ -21,13 +20,20 @@ class CtlRepository(private val db: AppDatabase) {
         db.equipoDao().deleteAll()
     }
 
-    // Operaciones con operadores
+    fun getEquiposByContratista(contratistaId: String): Flow<List<EquipoEntity>> {
+        return db.equipoDao().getEquiposByContratista(contratistaId)
+    }
+
     suspend fun saveOperadores(operadores: List<OperadorEntity>) {
         db.operadorDao().createOperadores(operadores)
     }
 
     suspend fun deleteOperadores() {
         db.operadorDao().deleteAll()
+    }
+
+    fun getOperadoresByEquipo(EquipoId: String): Flow<List<OperadorEntity>> {
+        return db.operadorDao().getOperadoresByEquipo(EquipoId)
     }
 
 
@@ -39,12 +45,24 @@ class CtlRepository(private val db: AppDatabase) {
         db.contratistaDao().deleteAll()
     }
 
+    fun getContratistas(): Flow<List<ContratistaEntity>> {
+        return db.contratistaDao().getAll()
+    }
+
+    suspend fun getContratistaById(id: String): ContratistaEntity? {
+        return db.contratistaDao().getById(id)
+    }
+
     suspend fun saveEspecies(especies: List<EspecieEntity>) {
         db.especieDao().createEspecies(especies)
     }
 
     suspend fun deleteEspecies() {
         db.especieDao().deleteAll()
+    }
+
+    fun getAllEspecies(): Flow<List<EspecieEntity>> {
+        return db.especieDao().getAllEspecies()
     }
 
     suspend fun saveTurnos(turnos: List<TurnoEntity>) {
@@ -55,6 +73,11 @@ class CtlRepository(private val db: AppDatabase) {
         db.turnoDao().deleteAll()
     }
 
+    fun getTurnosByContratista(contratistaId: String): Flow<List<TurnoEntity>> {
+        return db.turnoDao().getTurnosByContratista(contratistaId)
+    }
+
+
     suspend fun saveZonas(zonas: List<ZonasEntity>) {
         db.zonaDao().insertZonas(zonas)
     }
@@ -63,7 +86,7 @@ class CtlRepository(private val db: AppDatabase) {
         db.zonaDao().deleteAll()
     }
 
-    suspend fun getAllZonas(): List<ZonasEntity>{
+    suspend fun getAllZonas(): List<ZonasEntity> {
         return db.zonaDao().getAllZonas()
     }
 
@@ -75,7 +98,11 @@ class CtlRepository(private val db: AppDatabase) {
         db.nucleoDao().deleteAll()
     }
 
-    suspend fun getAllNucleos(): List<NucleosEntity>{
+    fun getNucleosByZona(zonaId: String): Flow<List<NucleosEntity>> {
+        return db.nucleoDao().getNucleosByZona(zonaId)
+    }
+
+    suspend fun getAllNucleos(): List<NucleosEntity> {
         return db.nucleoDao().getAllNucleos()
     }
 
@@ -85,6 +112,10 @@ class CtlRepository(private val db: AppDatabase) {
 
     suspend fun deleteFincas() {
         db.fincaDao().deleteAll()
+    }
+
+    fun getFincasByNucleos(nucleoId: String): Flow<List<FincasEntity>> {
+        return db.fincaDao().getFincasByNucleo(nucleoId)
     }
 
 

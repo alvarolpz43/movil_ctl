@@ -37,7 +37,7 @@ import com.example.movil_ctl.data.entities.ZonasEntity
         OperadorEntity::class,
         RegistroEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
