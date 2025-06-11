@@ -128,10 +128,16 @@ class DynamicFormViewModel @Inject constructor(
         )
     }
 
+    fun puedeAgregarOtraParada(): Boolean {
+        return _uiState.value.paradasAdicionales.size < 5
+    }
+
     fun agregarParada() {
-        _uiState.value = _uiState.value.copy(
-            paradasAdicionales = _uiState.value.paradasAdicionales + Parada()
-        )
+        if (_uiState.value.paradasAdicionales.size < 5) {
+            _uiState.value = _uiState.value.copy(
+                paradasAdicionales = _uiState.value.paradasAdicionales + Parada()
+            )
+        }
     }
 
     fun deleteParada(index: Int) {
@@ -181,15 +187,28 @@ class DynamicFormViewModel @Inject constructor(
     fun reset() {
         _uiState.value = DynamicFormUiState()
     }
-
     fun buildFormularioCompletoDynamic(): Any {
 
 
         val parcial =
             FormularioHolder.formulario ?: return error("No se ha encontrado un formulario previo")
 
-        val tiempos = _uiState.value.paradasAdicionales.mapNotNull { it.tiempo.toDoubleOrNull() }
-        val motivos = _uiState.value.paradasAdicionales.map { it.motivo.ifBlank { "Sin motivo" } }
+        val paradas = _uiState.value.paradasAdicionales.take(5)
+
+        val tiempos = buildList {
+            paradas.forEach {
+                val tiempoEnHoras = minutosAHoras(it.tiempo)
+                add(tiempoEnHoras.toString())
+            }
+            repeat(5 - size) { add("") }
+        }
+
+
+        val motivos = buildList {
+            paradas.forEach { add(it.motivo.ifBlank { "" }) }
+            repeat(5 - size) { add("") }
+        }
+
 
         return when (parcial) {
             is FormularioCompletoFw -> {
@@ -212,7 +231,7 @@ class DynamicFormViewModel @Inject constructor(
                     novedades = _uiState.value.respuestas["novedad"] ?: "",
                     clima = _uiState.value.respuestas["clima"] ?: "",
                     hSueloSaturado = _uiState.value.respuestas["saturado"]?.toDoubleOrNull() ?: 0.0,
-                    hParadas = 0.0,
+                    hParadas = calcularHorasParadas(),
                     totrasParadas = tiempos,
                     motivoOtrasParadas = motivos
                 )
@@ -237,7 +256,7 @@ class DynamicFormViewModel @Inject constructor(
                     tUsoWinche = _uiState.value.respuestas["winche"]?.toDoubleOrNull() ?: 0.0,
                     novedades = _uiState.value.respuestas["novedad"] ?: "",
                     clima = _uiState.value.respuestas["suelo"] ?: "",
-                    hParadas = 0.0,
+                    hParadas = calcularHorasParadas(),
                     totrasParadas = tiempos,
                     motivoOtrasParadas = motivos
                 )
@@ -247,9 +266,26 @@ class DynamicFormViewModel @Inject constructor(
         }
     }
 
+
     private fun minutosAHoras(valor: String?): Double {
         val minutos = valor?.toDoubleOrNull() ?: 0.0
         return minutos / 60.0
     }
+
+    private fun calcularHorasParadas(): Double {
+        val respuestas = _uiState.value.respuestas
+
+        val paradaMecanica = minutosAHoras(respuestas["paradas_mecanicas"])
+        val alistamiento = minutosAHoras(respuestas["alistamiento"])
+        val tanqueo = minutosAHoras(respuestas["tanqueo"])
+        val alimentacion = minutosAHoras(respuestas["alimentacion"])
+
+        val otrasParadasHoras = _uiState.value.paradasAdicionales
+            .mapNotNull { minutosAHoras(it.tiempo).takeIf { it > 0.0 } }
+            .sum()
+
+        return paradaMecanica + alistamiento + tanqueo + alimentacion + otrasParadasHoras
+    }
+
 
 }

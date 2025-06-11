@@ -31,7 +31,6 @@ data class FormularioCompletoFw(
     val clima: String,
     val hSueloSaturado: Double,
     val hParadas: Double,
-    val totrasParadas: List<Double>,
-    val motivoOtrasParadas: List<String>,
-
+    val totrasParadas: List<String>,
+    val motivoOtrasParadas: List<String>
     )

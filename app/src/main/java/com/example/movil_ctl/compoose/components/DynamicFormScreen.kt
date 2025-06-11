@@ -1,6 +1,7 @@
 package com.example.movil_ctl.compoose.components
 
 import android.app.TimePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -80,6 +81,7 @@ fun DynamicFormScreen(
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     LaunchedEffect(tipoEquipo) {
         viewModel.setTipoEquipo(tipoEquipo)
@@ -502,7 +504,17 @@ fun DynamicFormScreen(
                         }
 
                         Button(
-                            onClick = { viewModel.agregarParada() },
+                            onClick ={
+                                if (viewModel.puedeAgregarOtraParada()) {
+                                    viewModel.agregarParada()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Solo se permiten hasta 5 paradas adicionales",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),

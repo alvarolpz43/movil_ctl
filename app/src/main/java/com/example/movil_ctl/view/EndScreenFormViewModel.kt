@@ -104,7 +104,7 @@ class EndScreenFormViewModel @Inject constructor(
             FormularioHolder.formulario ?: error("No se ha encontrado un formulario previo")
 
 
-        val (contenido, tipo) = when (formulario) {
+        val (contenido, tipo, fechaParaNombre) = when (formulario) {
             is FormularioCompletoFw -> {
                 val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                 val fechaFormateada = formatter.format(formulario.fecha)
@@ -145,13 +145,14 @@ class EndScreenFormViewModel @Inject constructor(
                     formulario.totrasParadas.forEach { append(";$it") }
                     formulario.motivoOtrasParadas.forEach { append(";$it") }
                 }
-                contenidoFw to "forwarder"
+                Triple(contenidoFw, "forwarder", formulario.fecha)
             }
 
             is FormularioCompletoHv -> {
+                val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                val fechaFormateada = formatter.format(formulario.fecha)
+
                 val contenidoHv = buildString {
-                    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-                    val fechaFormateada = formatter.format(formulario.fecha)
                     append(
                         listOf(
                             formulario.serieEquipo.uppercase(),
@@ -183,16 +184,26 @@ class EndScreenFormViewModel @Inject constructor(
                             formatAny(formulario.hParadas)
                         ).joinToString(";")
                     )
-                    formulario.totrasParadas.forEach { append(";$it") }
-                    formulario.motivoOtrasParadas.forEach { append(";$it") }
+                    if (formulario.totrasParadas.isNotEmpty()) {
+                        append(";")
+                        append(formulario.totrasParadas.joinToString(";"))
+                    }
+                    if (formulario.motivoOtrasParadas.isNotEmpty()) {
+                        append(";")
+                        append(formulario.motivoOtrasParadas.joinToString(";"))
+                    }
+
                 }
-                contenidoHv to "harvester"
+                Triple(contenidoHv, "harvester", formulario.fecha)
             }
 
-            else -> "0" to "desconocido"
+            else -> Triple("0", "desconocido", java.util.Date())
         }
 
-        val fileName = "formulario_${tipo}_${System.currentTimeMillis()}.txt"
+
+        val formatterNombre = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+        val fechaFormateadaNombre = formatterNombre.format(fechaParaNombre)
+        val fileName = "formulario_${tipo}_${fechaFormateadaNombre}.txt"
         val file = File(context.filesDir, fileName)
         file.writeText(contenido)
         return file

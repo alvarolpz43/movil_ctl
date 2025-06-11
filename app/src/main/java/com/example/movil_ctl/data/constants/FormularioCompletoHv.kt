@@ -30,6 +30,6 @@ data class FormularioCompletoHv(
     val novedades: String,
     val clima: String,
     val hParadas: Double,
-    val totrasParadas: List<Double>,
+    val totrasParadas: List<String>,
     val motivoOtrasParadas: List<String>,
-)
+    )

@@ -1,6 +1,8 @@
 package com.example.movil_ctl.compoose
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.excludeFromSystemGesture
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -58,16 +60,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movil_ctl.data.constants.FormularioHolder
-import com.example.movil_ctl.ui.theme.colorDosSw
 import com.example.movil_ctl.ui.theme.colorEfa
 import com.example.movil_ctl.ui.theme.colorUnoSw
 import com.example.movil_ctl.view.FirstFormSViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,6 +86,9 @@ fun FirstScreenForm(
     val nucleos by viewModel.nucleos.collectAsState()
     val fincas by viewModel.fincas.collectAsState()
     val lote by viewModel.lote.collectAsState()
+    val calendar = Calendar.getInstance()
+    val dateFormatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
+    val interactionSource = remember { MutableInteractionSource() }
 
 
     var selectedZonaName by remember { mutableStateOf("") }
@@ -91,11 +98,31 @@ fun FirstScreenForm(
     var selectedTurnoName by remember { mutableStateOf("") }
     var selectedOperadorName by remember { mutableStateOf("") }
     var selectedFincaCode by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf(calendar.time) }
 
-
+    val formattedDate = remember(selectedDate) {
+        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(selectedDate)
+    }
     LaunchedEffect(Unit) {
         viewModel.loadFirstFormScreen(contratistaId, equipoId)
     }
+
+
+
+    val context = LocalContext.current
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                calendar.set(year, month, dayOfMonth)
+                selectedDate = calendar.time
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
+
 
     Scaffold(
         topBar = {
@@ -201,6 +228,34 @@ fun FirstScreenForm(
                             modifier = Modifier.padding(bottom = 8.dp),
                             color = Color.Black
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { datePickerDialog.show() }
+                        ) {
+                            OutlinedTextField(
+                                value = formattedDate,
+                                onValueChange = {},
+                                readOnly = true,
+                                enabled = false,
+                                label = { Text("Fecha") },
+                                leadingIcon = {
+                                    Icon(Icons.Default.Schedule, contentDescription = null, tint = Color.Black)
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    disabledBorderColor = Color.Black,
+                                    disabledLabelColor = Color.Black,
+                                    disabledTextColor = Color.Black,
+                                    disabledLeadingIconColor = Color.Black,
+                                    disabledTrailingIconColor = Color.Black
+                                )
+                            )
+                        }
+
+
+
 
                         // ZONA
                         EnhancedDropdownField(
@@ -348,7 +403,8 @@ fun FirstScreenForm(
                                         selectedEspecieName = selectedEspecieName,
                                         selectedTurnoName = selectedTurnoName,
                                         selectedOperadorName = selectedOperadorName,
-                                        selectedCodeFinca = selectedFincaCode
+                                        selectedCodeFinca = selectedFincaCode,
+                                        selectedFecha = selectedDate
                                     )
                                     FormularioHolder.formulario = formulario
                                     navController.navigate("formSDos/$tipoEquipo/$contratistaId/$equipoId")

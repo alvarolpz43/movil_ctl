@@ -87,6 +87,7 @@ class FirstFormSViewModel @Inject constructor(
 
     fun buildFormularioCompleto(
         tipoEquipo: String,
+        selectedFecha: Date,
         selectedZonaName: String,
         selectedFincaName: String,
         selectedCodeFinca: String,
@@ -100,12 +101,12 @@ class FirstFormSViewModel @Inject constructor(
 
         return if (tipoEquipo.equals("forwarder", true)) {
             FormularioCompletoFw(
-                serieEquipo = _uiState.value.serieEquipo,
+                serieEquipo = _uiState.value.equipoNombre,
                 nombreOperador = selectedOperadorName,
                 cedulaOperador = cedula,
                 zona = selectedZonaName,
                 nombreContratista = _uiState.value.nombreContratista,
-                fecha = Date(),
+                fecha = selectedFecha,
                 finca = selectedCodeFinca,
                 especie = selectedEspecieName,
                 lote = lote.value,
@@ -133,7 +134,7 @@ class FirstFormSViewModel @Inject constructor(
             )
         } else {
             FormularioCompletoHv(
-                serieEquipo = _uiState.value.serieEquipo,
+                serieEquipo = _uiState.value.equipoNombre,
                 nombreOperador = selectedOperadorName,
                 cedulaOperador = cedula,
                 zona = selectedZonaName,
